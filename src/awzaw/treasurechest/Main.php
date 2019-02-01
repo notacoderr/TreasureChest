@@ -22,6 +22,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     public $prefs;
     public $chests;
     public $treasure;
+    public $corex;
     private $taskHandler;
 
     public function onEnable() {
@@ -36,7 +37,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $this->prefs = new Config($this->getDataFolder() . "prefs.yml", CONFIG::YAML, [
             "RandomizeAmount" => true
         ]);
-
+	$this->corex = $this->getServer()->getPluginManager()->getPlugin("CoreX2");
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
     }
 
