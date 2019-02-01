@@ -22,7 +22,7 @@ class RefillTask extends Task {
 			$tile = $lev->getTile(new Vector3((int) $c[0], (int) $c[1], (int) $c[2]));
 			if (!$tile) continue;
 		    	if (!($tile instanceof Chest)) continue;
-
+			
 		    	$tile->getInventory()->clearAll();
 		   	$inv = $tile->getInventory();
 
@@ -32,13 +32,22 @@ class RefillTask extends Task {
 					$i = 0;
 				    	foreach ($tarray as $tstring) {
 						$t = explode(":", $tstring);
-
-						$amount = $t[1];
-						if ($this->plugin->prefs->get("RandomizeAmount")) $amount = mt_rand(1, $amount);
-						if (mt_rand(0, 100) < $t[2]) {
-							$inv->setItem($i, ItemFactory::get($t[0], 0, $amount));
-							$i++;
+						if(is_string($t[1]) && $t[1] == "custom")
+						{
+							if (mt_rand(0, 100) < $t[2]) {
+								$item = $this->plugin->corex->items->createItem((string) $t[0]);
+								$inv->setItem($i, $item);
+								
+							}
+						} else {
+							$amount = $t[1];
+							if ($this->plugin->prefs->get("RandomizeAmount")) $amount = mt_rand(1, $amount);
+							if (mt_rand(0, 100) < $t[2]) {
+								$item = ItemFactory::get((int) $t[0], 0, $amount);
+								$inv->setItem($i, $item);
+							}
 						}
+						$i++;
 			    		}
 			    		break;
 				}
